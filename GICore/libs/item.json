@@ -1,0 +1,72 @@
+{
+  "metaType": "UNSPECIFIC",
+  "displayName": {
+    "raw": {
+      "text": "",
+      "extra": [
+        { "text": "Eternal Frozen Blade", "italic": false, "color": "aqua", "bold": true }
+      ]
+    },
+    "plain": "Eternal Frozen Blade"
+  },
+  "lore": [
+    {"text":"","extra":[{"text":"Sword","italic":false,"color":"red"}]},
+    {"text":"","extra":[{"text":"","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"white","bold":false}]},
+    {"text":"","extra":[{"text":"Requires Lvl 70","italic":false,"color":"yellow"}]},
+    {"text":"","extra":[{"text":"","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"white","bold":false}]},
+    {"text":"","extra":[{"text":" ","italic":false,"color":"dark_aqua"},{"text":"➸ Attack Damage: ","italic":false,"color":"gray"},{"text":"74.1","italic":false,"color":"white"}]},
+    {"text":"","extra":[{"text":" ","italic":false,"color":"dark_aqua"},{"text":"➸ Attack Speed: ","italic":false,"color":"gray"},{"text":"1.6","italic":false,"color":"white"}]},
+    {"text":"","extra":[{"text":" ","italic":false,"color":"dark_aqua"},{"text":"■ Crit Strike Chance: ","italic":false,"color":"gray"},{"text":"+3.9%","italic":false,"color":"white"}]},
+    {"text":"","extra":[{"text":" ","italic":false,"color":"dark_aqua"},{"text":"■ Crit Strike Power: ","italic":false,"color":"gray"},{"text":"+30.3%","italic":false,"color":"white"}]},
+    {"text":"","extra":[{"text":" ","italic":false,"color":"dark_aqua"},{"text":"■ Weapon Damage: ","italic":false,"color":"gray"},{"text":"+26.5%","italic":false,"color":"white"}]},
+    {"text":"","extra":[{"text":" ","italic":false,"color":"dark_aqua"},{"text":"■ Magic Damage: ","italic":false,"color":"gray"},{"text":"+20.6%","italic":false,"color":"white"}]},
+    {"text":"","extra":[{"text":" ","italic":false,"color":"dark_aqua"},{"text":"■ Parry Rating: ","italic":false,"color":"gray"},{"text":"+26%","italic":false,"color":"white"}]},
+    {"text":"","extra":[{"text":" ","italic":false,"color":"dark_aqua"},{"text":"■ Movement Speed: ","italic":false,"color":"gray"},{"text":"-1","italic":false,"color":"white"}]},
+    {"text":"","extra":[{"text":" ","italic":false,"color":"dark_aqua"},{"text":"■ Two Handed","italic":false,"color":"gray"}]},
+    {"text":"","extra":[{"text":" ","italic":false,"color":"dark_aqua"},{"text":"■ Uses ","italic":false,"color":"gray"},{"text":"12 Stamina","italic":false,"color":"blue"}]},
+    {"text":"","extra":[{"text":"","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"white","bold":false}]},
+    {"text":"","extra":[{"text":"❄","italic":false,"color":"aqua"},{"text":" 59.2 Ice Damage","italic":false,"color":"gray"}]},
+    {"text":"","extra":[{"text":"","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"white","bold":false}]},
+    {"text":"","extra":[{"text":"| ","italic":false,"color":"dark_gray"},{"text":"Right Click ","italic":false,"color":"gray"},{"text":"|","italic":false,"color":"dark_gray"},{"text":"|","italic":false,"color":"yellow"},{"text":"| ","italic":false,"color":"dark_gray"},{"text":"Frozen Aura","italic":false,"color":"gray","bold":true}]} ,
+    {"text":"","extra":[{"text":" ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"white","bold":false},{"text":"|","italic":false,"color":"dark_gray","bold":true},{"text":" ","italic":false,"color":"gray","bold":false},{"text":"Duration","italic":false,"color":"gray"},{"text":": ","italic":false,"color":"dark_gray"},{"text":"8 ","italic":false,"color":"white"},{"text":"|","italic":false,"color":"dark_gray","bold":true},{"text":" ","italic":false,"color":"gray","bold":false},{"text":"Cooldown","italic":false,"color":"gray"},{"text":": ","italic":false,"color":"dark_gray"},{"text":"12 ","italic":false,"color":"white"},{"text":"|","italic":false,"color":"dark_gray","bold":true},{"text":" ","italic":false,"color":"gray","bold":false},{"text":"Amplifier","italic":false,"color":"gray"},{"text":": ","italic":false,"color":"dark_gray"},{"text":"2","italic":false,"color":"white"}]},
+    {"text":"","extra":[{"text":"Radius","italic":false,"color":"gray"},{"text":": ","italic":false,"color":"dark_gray"},{"text":"10","italic":false,"color":"white"}]},
+    {"text":"","extra":[{"text":"","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"white","bold":false}]},
+    {"text":"","extra":[{"text":"◆ Empty Blue Gem Socket","italic":false,"color":"green"}]},
+    {"text":"","extra":[{"text":"◆ Empty Blue Gem Socket","italic":false,"color":"green"}]},
+    {"text":"","extra":[{"text":"","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"white","bold":false}]},
+    {"text":"","extra":[{"text":"Made from ice so cold that","italic":false,"color":"aqua"}]},
+    {"text":"","extra":[{"text":"it will never melt.","italic":false,"color":"aqua"}]},
+    {"text":"","extra":[{"text":"","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"white","bold":false}]},
+    {"text":"","extra":[{"text":" ","italic":false,"color":"dark_aqua"},{"text":"Tier: ","italic":false,"color":"gray"},{"text":"MYTHICAL","italic":false,"color":"dark_purple","bold":true}]} ,
+    {"text":"","extra":[{"text":"Durability: 15000 / 15000","italic":false,"color":"gray"}]}
+  ],
+  "attributeModifiers": {
+    "minecraft:generic.attack_speed": [
+      {
+        "key": "mmoitems:decoy",
+        "operation": "ADD_NUMBER",
+        "amount": 0.0,
+        "slot": "any"
+      }
+    ]
+  },
+  "itemFlags": ["HIDE_ATTRIBUTES"],
+  "custom": {
+    "encoding": "base64+gzip (NBT)",
+    "base64": "H4sIAAAAAAAA/41VTW/jRBiesiKKVrDiYwEJJBhZICFtG5J2++UD1LWn... (생략)",
+    "decodedPreviewKeys": [
+      "MMOITEMS_NAME",
+      "MMOITEMS_ITEM_ID",
+      "MMOITEMS_ITEM_TYPE",
+      "MMOITEMS_TIER",
+      "MMOITEMS_ATTACK_SPEED",
+      "MMOITEMS_ATTACK_DAMAGE",
+      "FROZEN_AURA",
+      "RIGHT_CLICK",
+      "SWORD",
+      "MYTHICAL",
+      "Durability",
+      "…"
+    ]
+  }
+}

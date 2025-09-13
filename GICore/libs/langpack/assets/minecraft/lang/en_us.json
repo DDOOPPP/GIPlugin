@@ -1,0 +1,13 @@
+{
+  "label.gi.modifiers": "Modifiers",
+  "stat.gi.attack_speed": "Attack Speed",
+  "stat.gi.attack_damage": "Attack Damage",
+  "stat.gi.required_level": "Required Level",
+  "stat.gi.fire_damage": "Fire Damage",
+
+  "item.gi.sword.long_sword": "Long Sword",
+  "lore.gi.sword.long_sword.extra": "A well-balanced blade.",
+
+  "modifier.gi.sharp": "Sharp",
+  "modifier.gi.fiery": "Fiery"
+}

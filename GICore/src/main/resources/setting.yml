@@ -1,0 +1,7 @@
+guild:
+  #창설자금
+  createvalue: 100000
+  #초기 길드맴버정원
+  defaultMember: 5
+  #최대 길드맴버정원
+  maxMember: 8

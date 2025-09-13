@@ -1,0 +1,4 @@
+name: GIAPI
+version: '1.0-SNAPSHOT'
+main: org.gi.gIAPI.GIAPI
+api-version: '1.21'

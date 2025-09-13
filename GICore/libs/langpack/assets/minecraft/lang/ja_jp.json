@@ -1,0 +1,13 @@
+{
+  "label.gi.modifiers": "追加オプション",
+  "stat.gi.attack_speed": "攻撃速度",
+  "stat.gi.attack_damage": "攻撃力",
+  "stat.gi.required_level": "必要レベル",
+  "stat.gi.fire_damage": "火属性ダメージ",
+
+  "item.gi.sword.long_sword": "ロングソード",
+  "lore.gi.sword.long_sword.extra": "バランスの取れた剣です。",
+
+  "modifier.gi.sharp": "鋭い",
+  "modifier.gi.fiery": "燃える"
+}

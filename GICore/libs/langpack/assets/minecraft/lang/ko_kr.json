@@ -1,0 +1,13 @@
+{
+  "label.gi.modifiers": "추가 옵션",
+  "stat.gi.attack_speed": "공격 속도",
+  "stat.gi.attack_damage": "공격력",
+  "stat.gi.required_level": "요구 레벨",
+  "stat.gi.fire_damage": "불 속성 데미지",
+
+  "item.gi.sword.long_sword": "롱 소드",
+  "lore.gi.sword.long_sword.extra": "균형 잡힌 검입니다.",
+
+  "modifier.gi.sharp": "날카로운",
+  "modifier.gi.fiery": "불타는"
+}

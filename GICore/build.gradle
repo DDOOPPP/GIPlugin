@@ -1,0 +1,106 @@
+plugins {
+    id 'java'
+    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'org.gi'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "papermc-repo"
+        url = "https://repo.papermc.io/repository/maven-public/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+    maven {
+        url 'https://jitpack.io'
+    }
+    maven {
+        url = 'https://repo.extendedclip.com/releases/'
+    }
+    maven {
+        name = "matteodev"
+        url = uri("https://maven.devs.beer/")
+    }
+    maven {
+        url 'https://mvn.lumine.io/repository/maven-public/'
+    }
+    maven {
+        name = "phoenix"
+        url = uri("https://nexus.phoenixdevt.fr/repository/maven-public/")
+    }
+    maven {
+        url "https://repo.codemc.io/repository/maven-snapshots/"
+    }
+}
+
+dependencies {
+    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    compileOnly("org.projectlombok:lombok:1.18.38")
+    annotationProcessor("org.projectlombok:lombok:1.18.38")
+    implementation("com.zaxxer:HikariCP:6.3.0")
+    compileOnly 'me.clip:placeholderapi:2.11.6'
+    compileOnly 'dev.lone:api-itemsadder:4.0.10'
+    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+    compileOnly("io.lumine:MythicLib-dist:1.6.2-SNAPSHOT")
+    compileOnly("net.Indyuce:MMOCore-API:1.12.1-SNAPSHOT")
+    compileOnly("net.Indyuce:MMOItems-API:6.10-SNAPSHOT")
+    compileOnly 'io.lumine:Mythic-Dist:5.6.1'
+    implementation("redis.clients:jedis:6.1.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.19.2")
+    compileOnly 'net.kyori:adventure-api:4.17.0'
+
+    compileOnly files('libs/citizensapi.jar')
+    compileOnly files('libs/GIAPI.jar')
+}
+
+tasks {
+    runServer {
+        // Configure the Minecraft version for our task.
+        // This is the only required configuration besides applying the plugin.
+        // Your plugin's jar (or shadowJar if present) will be used automatically.
+        minecraftVersion("1.21")
+    }
+}
+shadowJar {
+    archiveBaseName.set("GICore")
+    archiveClassifier.set("") // 기본은 'all', 빈 문자열로 설정 시 제거됨
+    archiveVersion.set("1.0.0")
+    manifest {
+        attributes 'Main-Class': 'org.gi.gICore.GICore' // Main 클래스 지정
+    }
+}
+tasks.build {
+    dependsOn shadowJar
+}
+def targetJavaVersion = 21
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
