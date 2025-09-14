@@ -111,4 +111,8 @@ public class DataBaseConnection {
         }
         return dataSource;
     }
+
+    public static int getLogCount(){
+        return logCount;
+    }
 }

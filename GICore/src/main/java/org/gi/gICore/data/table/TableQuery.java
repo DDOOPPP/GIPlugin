@@ -28,7 +28,6 @@ public class TableQuery {
             + "player_name VARCHAR(50) NOT NULL,"
             + "balance DECIMAL(10,0) NOT NULL DEFAULT 500,"
             + "guild VARCHAR(50) NOT NULL DEFAULT 'NONE',"
-            + "class VARCHAR(50) NOT NULL DEFAULT '모험가',"
             + "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
             + "updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP);";
 

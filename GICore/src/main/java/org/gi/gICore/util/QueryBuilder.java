@@ -2,6 +2,7 @@ package org.gi.gICore.util;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class QueryBuilder {
@@ -104,9 +105,26 @@ public class QueryBuilder {
         return sql.toString();
     }
 
-    public String DeleteOptionQuery(String key, int limit) {
-        return "DELETE FROM " + tableName +
-                " WHERE " + key + " = ? " +
-                "AND (SELECT COUNT(*) FROM " + tableName + " WHERE " + key + " = ?) > " + limit;
+    public static String deleteOlderKeepNForKey(String tableName, int keep) {
+        return "DELETE FROM " + backtick(tableName) + " " +
+                "WHERE `id` IN ( " +
+                "  SELECT id FROM ( " +
+                "    SELECT id, " +
+                "           ROW_NUMBER() OVER (PARTITION BY `key` " +
+                "                              ORDER BY COALESCE(`created_at`, '1970-01-01 00:00:00') DESC, `id` DESC) AS rn " +
+                "    FROM " + backtick(tableName) + " " +
+                "    WHERE `key` = ? " +
+                "  ) x " +
+                "  WHERE x.rn > ? " +
+                ")";
+    }
+
+    private static String backtick(String identifier) {
+        if (identifier == null || identifier.isEmpty())
+            throw new IllegalArgumentException("Empty identifier");
+        // 역따옴표 포함 방지
+        if (identifier.indexOf('`') >= 0)
+            throw new IllegalArgumentException("Invalid identifier: " + identifier);
+        return "`" + identifier + "`";
     }
 }
