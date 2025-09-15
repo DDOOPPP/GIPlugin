@@ -20,6 +20,6 @@ public class MessageName {
     public static final String NOT_FOUND_DATA = "not_found_data";
     public static final String USER_INFORMATION = "user_information";
 
-
+    public static final String CALL_ADMIN = "call_admin";
     public static final String NUMBER_ERROR = "number_error";
 }

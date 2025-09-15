@@ -1,0 +1,53 @@
+resource-pack:
+  # 언어팩 고유 UUID (임의 생성, 한 번 정해서 계속 쓰세요)
+  uuid: "11111111-2222-3333-4444-555555555555"
+  # 언어팩 ZIP 파일 (서버 로컬 경로)
+  langFile: "plugins/GILangStack/langpack.zip"
+  # 언어팩 ZIP의 SHA1 해시 (40자 HEX)
+  #   PowerShell: Get-FileHash .\langpack.zip -Algorithm SHA1
+  #   Linux/macOS: sha1sum langpack.zip | awk '{print $1}'
+  langSha1: "596835C4DBB7090BF5677A870255546D409F1A7B"
+  # HTTP 호스팅 정보 (플러그인 내장 서버 or Nginx 등)
+  httpHost: "192.168.0.201"
+  httpPort: 8164
+  httpPath: "/langpack.zip"
+  # IA 적용 후 언어팩을 전송하기까지 기다릴 틱 수
+  # (20틱 = 1초, 기본은 40틱 ≈ 2초 권장)
+  tickTime: 40
+
+
+
+database: 'MySQL'
+host: 'localhost'
+port: 3306
+log_count: 30
+
+mysql:
+  user: 'root'
+  password: '2486'
+  database: 'minecraft'
+  maxPoolSize: 10
+  minimumIdle: 2
+  idleTimeout: 60000 #60 Sec
+  maxLifetime: 1800000 # 30 Min
+  connectionTimeout: 10000 # 10Sec
+
+useCache: true
+cache:
+  host: '172.31.173.125'
+  port: '6379'
+  timeout: 10000
+
+msg_files:
+  - "messages/economy.yml"
+  - "messages/common.yml"
+test:
+  - "label.gi.modifiers"
+  - "stat.gi.attack_speed"
+  - "stat.gi.attack_damage"
+  - "stat.gi.required_level"
+  - "stat.gi.fire_damage"
+  - "item.gi.sword.long_sword"
+  - "lore.gi.sword.long_sword.extra"
+  - "modifier.gi.sharp"
+  - "modifier.gi.fiery"

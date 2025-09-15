@@ -4,12 +4,14 @@ import io.lumine.mythic.bukkit.utils.lib.jooq.User;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.ServicePriority;
 import org.gi.gIAPI.component.adapter.GIConfig;
 import org.gi.gIAPI.util.FileUtil;
 import org.gi.gICore.GICore;
 import org.gi.gICore.manager.UserService;
 import org.gi.gICore.model.Enum;
 import org.gi.gICore.model.log.EconomyLog;
+import org.gi.gICore.model.user.UserData;
 import org.gi.gICore.model.values.MessageName;
 import org.gi.gICore.util.Result;
 
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class GIEconomy implements Economy {
+    private static GIEconomy instance;
     private GIConfig config;
     private BigDecimal base;
     private String unit;
@@ -28,6 +31,21 @@ public class GIEconomy implements Economy {
         this.base = BigDecimal.valueOf(start);
         this.unit = config.getString("economy.unit","GOLD");
         userService = UserService.getInstance();
+        instance = this;
+    }
+
+    public static void registerEconomy(){
+        if (instance == null){
+            instance = new GIEconomy();
+        }
+        GICore.getInstance().getServer().getServicesManager().register(Economy.class,instance,GICore.getInstance(), ServicePriority.Highest);
+    }
+
+    public static GIEconomy getInstance() {
+        if (instance == null) {
+            instance = new GIEconomy();
+        }
+        return instance;
     }
 
     @Override
@@ -173,10 +191,10 @@ public class GIEconomy implements Economy {
 
         Result result = userService.updateBalance(uuid, log);
         if (!result.isSuccess()){
-            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName);
+            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.CALL_ADMIN);
         }
 
-        return null;
+        return new EconomyResponse(amount,balance, EconomyResponse.ResponseType.SUCCESS,MessageName.WITHDRAW_OK);
     }
 
     @Override
@@ -196,7 +214,29 @@ public class GIEconomy implements Economy {
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer player, String worldName, double amount) {
-        return null;
+        UUID uuid = player.getUniqueId();
+        if (amount <= 0) {
+            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.INVALID_VALUE);
+        }
+        double balance = this.getBalance(player.getName(), worldName);
+        if (balance < 0) {
+            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.NOT_FOUND_DATA);
+        }
+
+        EconomyLog log = new EconomyLog(
+                uuid,
+                player.getName(),
+                Enum.EconomyType.DEPOSIT,
+                BigDecimal.valueOf(amount),
+                BigDecimal.valueOf(balance)
+        );
+
+        Result result = userService.updateBalance(uuid, log);
+        if (!result.isSuccess()){
+            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.CALL_ADMIN);
+        }
+
+        return new EconomyResponse(amount,balance, EconomyResponse.ResponseType.SUCCESS,MessageName.DEPOSIT_OK);
     }
 
     @Override
@@ -266,7 +306,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public boolean createPlayerAccount(OfflinePlayer player) {
-        return false;
+        return createPlayerAccount(player,null);
     }
 
     @Override
@@ -276,6 +316,20 @@ public class GIEconomy implements Economy {
 
     @Override
     public boolean createPlayerAccount(OfflinePlayer player, String worldName) {
-        return false;
+        if (userService.isExistUser(player.getUniqueId())) {
+            return true;
+        }
+        UUID uuid = player.getUniqueId();
+        String playerName = player.getName();
+        String guild = "NONE";
+
+        UserData userData =  new UserData(
+                uuid,
+                playerName,
+                base,
+                guild
+        );
+
+        return userService.create(userData).isSuccess();
     }
 }
