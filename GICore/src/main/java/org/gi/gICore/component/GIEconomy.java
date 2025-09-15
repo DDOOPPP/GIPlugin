@@ -1,12 +1,35 @@
 package org.gi.gICore.component;
 
+import io.lumine.mythic.bukkit.utils.lib.jooq.User;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.OfflinePlayer;
+import org.gi.gIAPI.component.adapter.GIConfig;
+import org.gi.gIAPI.util.FileUtil;
+import org.gi.gICore.GICore;
+import org.gi.gICore.manager.UserService;
+import org.gi.gICore.model.Enum;
+import org.gi.gICore.model.log.EconomyLog;
+import org.gi.gICore.model.values.MessageName;
+import org.gi.gICore.util.Result;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public class GIEconomy implements Economy {
+    private GIConfig config;
+    private BigDecimal base;
+    private String unit;
+    private UserService userService;
+    public GIEconomy() {
+        config = new GIConfig(FileUtil.getResource(GICore.getInstance(), "setting.yml"));
+        double start = config.getDouble("economy.start",100d);
+        this.base = BigDecimal.valueOf(start);
+        this.unit = config.getString("economy.unit","GOLD");
+        userService = UserService.getInstance();
+    }
+
     @Override
     public boolean isEnabled() {
         return true;
@@ -29,17 +52,17 @@ public class GIEconomy implements Economy {
 
     @Override
     public String format(double amount) {
-        return "";
+        return String.format("%.0f %s",amount,unit);
     }
 
     @Override
     public String currencyNamePlural() {
-        return "";
+        return this.unit;
     }
 
     @Override
     public String currencyNameSingular() {
-        return "";
+        return this.unit;
     }
 
     @Override
@@ -49,7 +72,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public boolean hasAccount(OfflinePlayer player) {
-        return false;
+        return this.hasAccount(player.getName(), null);
     }
 
     @Override
@@ -59,7 +82,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public boolean hasAccount(OfflinePlayer player, String worldName) {
-        return false;
+        return userService.isExistUser(player.getUniqueId());
     }
 
     @Override
@@ -69,7 +92,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public double getBalance(OfflinePlayer player) {
-        return 0;
+        return this.getBalance(player.getName(), null);
     }
 
     @Override
@@ -79,7 +102,10 @@ public class GIEconomy implements Economy {
 
     @Override
     public double getBalance(OfflinePlayer player, String world) {
-        return 0;
+        if (!hasAccount(player, world)) {
+            return -9999;
+        }
+        return userService.getUserData(player.getUniqueId()).getBalance().doubleValue();
     }
 
     @Override
@@ -89,7 +115,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public boolean has(OfflinePlayer player, double amount) {
-        return false;
+        return this.has(player,null, amount);
     }
 
     @Override
@@ -99,7 +125,11 @@ public class GIEconomy implements Economy {
 
     @Override
     public boolean has(OfflinePlayer player, String worldName, double amount) {
-        return false;
+        double balance = this.getBalance(player.getName(), worldName);
+        if (balance < 0) {
+            return false;
+        }
+        return balance >= amount;
     }
 
     @Override
@@ -109,7 +139,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer player, double amount) {
-        return null;
+        return this.withdrawPlayer(player.getName(), null, amount);
     }
 
     @Override
@@ -119,6 +149,33 @@ public class GIEconomy implements Economy {
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer player, String worldName, double amount) {
+        UUID uuid = player.getUniqueId();
+        if (amount <= 0) {
+            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.INVALID_VALUE);
+        }
+        double balance = this.getBalance(player.getName(), worldName);
+        if (balance < 0) {
+            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.NOT_FOUND_DATA);
+        }
+        if (!has(player,amount)){
+            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.NOT_ENOUGH_BALANCE);
+        }
+
+        balance -= amount;
+
+        EconomyLog log = new EconomyLog(
+                uuid,
+                player.getName(),
+                Enum.EconomyType.WITHDRAW,
+                BigDecimal.valueOf(amount),
+                BigDecimal.valueOf(balance)
+        );
+
+        Result result = userService.updateBalance(uuid, log);
+        if (!result.isSuccess()){
+            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName);
+        }
+
         return null;
     }
 
@@ -129,7 +186,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
-        return null;
+        return this.depositPlayer(player.getName(), null, amount);
     }
 
     @Override

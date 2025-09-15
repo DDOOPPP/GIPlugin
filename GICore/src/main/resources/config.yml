@@ -15,9 +15,7 @@ resource-pack:
   # (20틱 = 1초, 기본은 40틱 ≈ 2초 권장)
   tickTime: 40
 
-economy:
-  base: 500.00
-  unit: "GOLD"
+
 
 database: 'MySQL'
 host: 'localhost'

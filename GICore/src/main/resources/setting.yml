@@ -5,3 +5,7 @@ guild:
   defaultMember: 5
   #최대 길드맴버정원
   maxMember: 8
+
+economy:
+  start: 500.00
+  unit: "GOLD"
