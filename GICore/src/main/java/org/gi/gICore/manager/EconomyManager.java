@@ -29,6 +29,10 @@ public class EconomyManager {
         return BigDecimal.valueOf(economy.getBalance(player));
     }
 
+    public String format(double amount){
+        return economy.format(amount);
+    }
+
     public String deposit(OfflinePlayer player,double amount){
         return economy.depositPlayer(player,amount).errorMessage;
     }
