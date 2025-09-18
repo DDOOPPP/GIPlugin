@@ -8,7 +8,8 @@ public class TableQuery {
     public static final String MAILBOX = "gi_mailbox";
 
     public static final String CREATE_ECON_LOG = "CREATE TABLE IF NOT EXISTS "+ECONOMY_LOG +" ("
-            + "player_id VARCHAR(36) PRIMARY KEY,"
+            + "id AUTO_INCREMENT PRIMARY KEY,"
+            + "player_id VARCHAR(36) NOT NULL,"
             + "player_name VARCHAR(50) NOT NULL,"
             + "type VARCHAR(20) NOT NULL,"
             + "amount DECIMAL(10,0) NOT NULL,"

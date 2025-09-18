@@ -30,7 +30,7 @@ public class MessageUtil {
         matcher.appendTail(sb);
         String replacedMessage = sb.toString();
         if (player != null) {
-            PlaceholderAPI.setPlaceholders(player, sb.toString());
+            replacedMessage =  PlaceholderAPI.setPlaceholders(player, sb.toString());
         }
         return replacedMessage;
     }

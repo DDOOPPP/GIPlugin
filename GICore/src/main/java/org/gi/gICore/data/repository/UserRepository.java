@@ -172,7 +172,7 @@ public class UserRepository implements Repository<UserData, UUID> {
     }
 
     public Result updateBalance(UUID key, EconomyLog economyLog) {
-        String query = builder.buildUpdate("balance", "player_id");
+        String query = builder.buildUpdate ("player_id","balance");
         Result result = Result.FAIL;
         Connection conn = null;
         try{
@@ -181,6 +181,7 @@ public class UserRepository implements Repository<UserData, UUID> {
             try(PreparedStatement statement = conn.prepareStatement(query)){
                 statement.setBigDecimal(1,economyLog.getBalance());
                 statement.setString(2,key.toString());
+
 
                 boolean isSuccess = statement.executeUpdate() > 0;
 

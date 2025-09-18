@@ -2,10 +2,12 @@ package org.gi.gICore;
 
 import io.r2dbc.spi.Result;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.gi.gIAPI.component.adapter.GIConfig;
 import org.gi.gICore.component.GIEconomy;
+import org.gi.gICore.component.GIPlaceHolder;
 import org.gi.gICore.component.MessageLoader;
 import org.gi.gICore.controller.ControllerLoader;
 import org.gi.gICore.data.database.DataBaseConnection;
@@ -24,6 +26,9 @@ public class GICoreLoader {
 
         if (!registerVault(plugin)){
             plugin.getServer().getPluginManager().disablePlugin(plugin);
+            return;
+        }
+        if (!registerPlaceholders(plugin)){
             return;
         }
 
@@ -57,6 +62,13 @@ public class GICoreLoader {
         }
 
         GICore.setEconomy(econ);
+        return true;
+    }
+
+    private static boolean registerPlaceholders(Plugin plugin){
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+            new GIPlaceHolder().register();
+        }
         return true;
     }
 }

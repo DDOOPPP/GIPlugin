@@ -110,7 +110,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public double getBalance(OfflinePlayer player) {
-        return this.getBalance(player.getName(), null);
+        return this.getBalance(player, null);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public boolean has(OfflinePlayer player, String worldName, double amount) {
-        double balance = this.getBalance(player.getName(), worldName);
+        double balance = this.getBalance(player, worldName);
         if (balance < 0) {
             return false;
         }
@@ -157,7 +157,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer player, double amount) {
-        return this.withdrawPlayer(player.getName(), null, amount);
+        return this.withdrawPlayer(player, null, amount);
     }
 
     @Override
@@ -171,7 +171,7 @@ public class GIEconomy implements Economy {
         if (amount <= 0) {
             return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.INVALID_VALUE);
         }
-        double balance = this.getBalance(player.getName(), worldName);
+        double balance = this.getBalance(player, worldName);
         if (balance < 0) {
             return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.NOT_FOUND_DATA);
         }
@@ -204,7 +204,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
-        return this.depositPlayer(player.getName(), null, amount);
+        return this.depositPlayer(player, null, amount);
     }
 
     @Override
@@ -218,7 +218,7 @@ public class GIEconomy implements Economy {
         if (amount <= 0) {
             return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.INVALID_VALUE);
         }
-        double balance = this.getBalance(player.getName(), worldName);
+        double balance = this.getBalance(player, worldName);
         if (balance < 0) {
             return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.NOT_FOUND_DATA);
         }

@@ -58,6 +58,4 @@ public class GIPlaceHolder extends PlaceholderExpansion {
             return null;
         }
     }
-
-
 }
