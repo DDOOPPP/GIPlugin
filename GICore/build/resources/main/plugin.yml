@@ -4,10 +4,19 @@ main: org.gi.gICore.GICore
 api-version: '1.21'
 depend: ["GIAPI"]
 commands:
-  test:
-    description: "테스트 커맨드"
+  조회:
+    description: "소지금액 확인 커맨드"
+    aliases: ['info','recent']
+    usage: '/조회(info,recent)'
+  입금:
+    description: "입금 커맨드 관리자 권한"
     permission: gi.manager
-    permission-message: "관리자 권한이 존재하지않습니다"
+    aliases: ['depo']
+    usage: '/입금(depo) 이름 금액'
+  출금:
+    description: '출금 커맨드'
+    aliases: ['draw','out']
+    usage: '/출금(draw,out) 금액(amount)'
 permissions:
   gi.manager:
     default: op

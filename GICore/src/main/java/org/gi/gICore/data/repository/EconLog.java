@@ -29,7 +29,7 @@ public class EconLog implements LogRepository<EconomyLog,Connection> {
         if (connection == null) {
             return Result.ERROR("Connection is null");
         }
-        String query = builder.buildSelect(
+        String query = builder.buildInsert(
                 List.of("player_id","player_name","type","amount","balance")
         );
         Result result = Result.FAIL;
@@ -46,14 +46,6 @@ public class EconLog implements LogRepository<EconomyLog,Connection> {
             }
         } catch (SQLException e) {
             return Result.ERROR(e.getMessage());
-        }finally {
-            try{
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-
-            }
         }
         return result;
     }
@@ -71,14 +63,6 @@ public class EconLog implements LogRepository<EconomyLog,Connection> {
             result = statement.executeUpdate() > 0 ? Result.SUCCESS : Result.FAIL;
         } catch (SQLException e) {
             return Result.ERROR(e.getMessage());
-        }finally {
-            try{
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-
-            }
         }
         return result;
     }
@@ -88,7 +72,6 @@ public class EconLog implements LogRepository<EconomyLog,Connection> {
         int log_count = serachCount(key, connection);
         if (log_count > 0) {
             logger.info("Count: %s",String.valueOf(count));
-            return Result.FAIL;
         }
         Result result = Result.FAIL;
         if (log_count >= count) {

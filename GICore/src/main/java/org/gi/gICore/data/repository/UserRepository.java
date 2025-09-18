@@ -33,8 +33,8 @@ public class UserRepository implements Repository<UserData, UUID> {
     public Result insert(UserData data) {
         Connection conn = null;
         Result result = Result.FAIL;
-        String query = builder.buildSelectCount(
-                List.of("player_id, player_name, balance, guild")
+        String query = builder.buildInsert(
+                List.of("player_id","player_name","balance", "guild")
         );
 
         try{
@@ -266,13 +266,14 @@ public class UserRepository implements Repository<UserData, UUID> {
                 statement.setString(1,key.toString());
 
                 try(ResultSet resultSet = statement.executeQuery()){
-                    userData = new UserData(
-                            key,
-                            resultSet.getString("player_name"),
-                            resultSet.getBigDecimal("balance"),
-                            resultSet.getString("guild")
-                    );
-
+                    if (resultSet.next()){
+                        userData = new UserData(
+                                key,
+                                resultSet.getString("player_name"),
+                                resultSet.getBigDecimal("balance"),
+                                resultSet.getString("guild")
+                        );
+                    }
                 }
             }
 

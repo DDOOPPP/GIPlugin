@@ -2,12 +2,16 @@ package org.gi.gICore.data.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import javafx.util.Builder;
+import org.bukkit.Bukkit;
 import org.gi.gIAPI.component.adapter.GIConfig;
 import org.gi.gICore.GICore;
 import org.gi.gICore.GILogger;
+import org.gi.gICore.data.table.TableQuery;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLWarning;
 import java.sql.Statement;
 
 public class DataBaseConnection {
@@ -21,7 +25,6 @@ public class DataBaseConnection {
             logger.info("[DB] Database Not Use");
             return;
         }
-
         logger.info("Connecting to database...");
 
         String url = dbConfig.getURL();
@@ -49,7 +52,10 @@ public class DataBaseConnection {
             if (connection.isValid(5)){
                 logger.info("[DB] Connection Successful");
                 logger.info("[DB] Create Table...");
-                createTable(connection);
+                if(!createTable(connection)){
+                    Bukkit.getServer().getPluginManager().disablePlugin(GICore.getInstance());
+                    return;
+                }
             }
         }catch (SQLException e){
             logger.error("[DB] Connection Failed");
@@ -73,10 +79,21 @@ public class DataBaseConnection {
             }
 
             try(Statement statement = connection.createStatement()){
-                connection.setAutoCommit(false);
 
-                connection.commit();
-                logger.error("[DB] Create Table Successful...");
+                statement.execute(TableQuery.CREATE_USER);
+                statement.execute(TableQuery.CREATE_ECON_LOG);   // FK 참조하므로 이후
+
+                SQLWarning warn = statement.getWarnings();
+                while (warn != null) {
+                    System.err.printf("[SQLWarning] state=%s, code=%d, msg=%s%n",
+                            warn.getSQLState(), warn.getErrorCode(), warn.getMessage());
+                    warn = warn.getNextWarning();
+                }
+
+                if (warn != null){
+                    return false;
+                }
+                logger.info("[DB] Create Table Successful...");
                 return true;
             }
         } catch (SQLException e) {

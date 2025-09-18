@@ -17,6 +17,7 @@ public class QueryBuilder {
             return "No Query";
         }
         String cols = String.join(",", columns);
+
         String placeHolder = String.join(",", Collections.nCopies(columns.size(), "?"));
 
         return "INSERT INTO " + tableName + " (" + cols + ") VALUES (" + placeHolder + ")";

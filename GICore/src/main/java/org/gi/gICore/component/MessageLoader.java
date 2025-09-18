@@ -54,7 +54,7 @@ public class MessageLoader {
         for (String lang : lang){
             for (String file : baseMessageFile){
                 String total = path;
-                total = String.format(lang,file);
+                total = total.formatted(lang,file);
                 logger.info(total);
                 File f = new File(core.getDataFolder(),total);
                 if (f.exists()){
@@ -69,6 +69,7 @@ public class MessageLoader {
     private static void loadData(){
         for (String lang : lang){
             String path = "messages/%s".formatted(lang);
+            logger.info(path);
             File dir = new File(core.getDataFolder(),path);
 
             if (!dir.exists()){
@@ -79,7 +80,7 @@ public class MessageLoader {
             if (filelist == null){
                 continue;
             }
-
+            logger.info(""+ Arrays.stream(filelist).count());
             for (File file : filelist){
                 logger.info(file.getName());
                 Map<String,String> map = new HashMap<>();

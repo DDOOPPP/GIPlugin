@@ -21,6 +21,10 @@ public class EconomyManager {
         return economy.createPlayerAccount(player);
     }
 
+    public boolean hasAccount(Player player){
+        return economy.hasAccount(player);
+    }
+
     public boolean has(OfflinePlayer player,double amount){
         return economy.has(player,amount);
     }

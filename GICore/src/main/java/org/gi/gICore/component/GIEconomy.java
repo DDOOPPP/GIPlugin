@@ -90,7 +90,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public boolean hasAccount(OfflinePlayer player) {
-        return this.hasAccount(player.getName(), null);
+        return this.hasAccount(player, null);
     }
 
     @Override

@@ -7,28 +7,34 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.gi.gIAPI.component.adapter.GIConfig;
 import org.gi.gICore.component.GIEconomy;
 import org.gi.gICore.component.MessageLoader;
+import org.gi.gICore.controller.ControllerLoader;
 import org.gi.gICore.data.database.DataBaseConnection;
 
 public class GICoreLoader {
     private static GIConfig config;
     private static Plugin plugin;
     private static GILogger logger;
+    private static ControllerLoader controllerLoader;
     public static void initialize(){
         plugin = GICore.getInstance();
         config = GICore.getDefaultConfig();
         logger = new GILogger();
+
         connectDB(config);
 
         if (!registerVault(plugin)){
             plugin.getServer().getPluginManager().disablePlugin(plugin);
             return;
         }
+
         logger.info("Vault Initialize...");
         MessageLoader.Initialize();
+
+        controllerLoader = new ControllerLoader();
     }
 
     private static void connectDB(GIConfig dbConfig){
-        DataBaseConnection.connect(dbConfig);
+         DataBaseConnection.connect(dbConfig);
     }
 
     private static boolean registerVault(Plugin plugin){

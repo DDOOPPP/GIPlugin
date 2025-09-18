@@ -3,6 +3,7 @@ package org.gi.gICore.controller.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.gi.gICore.manager.EconomyManager;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandCore implements CommandExecutor {
@@ -12,11 +13,11 @@ public class CommandCore implements CommandExecutor {
 
         switch (commandName) {
             case CommandList.INFO :
-                return true;
+                return EconomyCommand.executeInfo(sender, args);
             case CommandList.DEPOSIT :
-                return true;
+                return EconomyCommand.executeDeposit(sender, args);
             case CommandList.WITHDRAW :
-                return true;
+                return EconomyCommand.executeWithdraw(sender, args);
             case CommandList.RELOAD :
                 return true;
             default:

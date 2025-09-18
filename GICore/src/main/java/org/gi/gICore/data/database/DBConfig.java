@@ -22,10 +22,7 @@ public class DBConfig {
 
     private int logCount;
     public DBConfig(GIConfig config) {
-        database = config.getString("database","NONE");
-        if (database.equals("NONE")) {
-            return;
-        }
+        database = config.getString("mysql.database","NONE");
         logCount = config.getInt("log_count",5);
         host = config.getString("mysql.host","localhost");
         port = config.getString("port","3306");
