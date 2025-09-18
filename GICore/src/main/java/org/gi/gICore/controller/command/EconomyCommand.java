@@ -96,6 +96,59 @@ public class EconomyCommand {
         return true;
     }
 
+    public static boolean executeWithdraw(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)){
+            return false;
+        }
+
+        Player player = (Player) sender;
+
+        String local = player.getLocale();
+        double amount = 0;
+        if (args.length < 1){
+            try{
+                amount = Double.parseDouble(args[0]);
+                Map<String ,Object> values = new HashMap<>();
+                String result_message = economyManager.withdraw(player,amount);
+                if (result_message.equals(MessageName.WITHDRAW_OK)){
+                    values.put(ValueName.AMOUNT, amount);
+                    sendUser(player,result_message,values);
+                    return true;
+                }
+                sendUser(player,result_message,null);
+            }catch (Exception e){
+                player.sendMessage(MessageLoader.getMessage(MessageName.NUMBER_ERROR,local));
+                return false;
+            }
+            return false;
+        }
+
+        if (args.length == 2 && player.isOp()){
+            try{
+                OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+                amount = Double.parseDouble(args[1]);
+                Map<String ,Object> values = new HashMap<>();
+
+                String result_message = economyManager.withdraw(player,amount);
+                String admin_message = MessageName.DEPOSIT_ADMIN_NG;
+                if (result_message.equals(MessageName.DEPOSIT_OK)){
+                    admin_message = MessageName.DEPOSIT_ADMIN_OK;
+                }
+
+                if (target.isOnline()){
+                    Player target_player = Bukkit.getPlayer(target.getUniqueId());
+                    sendUser(target_player,result_message,values);
+                }
+                sendAdmin(player,target,admin_message,values);
+                return true;
+            }catch (Exception e){
+                player.sendMessage(MessageLoader.getMessage(MessageName.NUMBER_ERROR,local));
+                return false;
+            }
+        }
+        return false;
+    }
+
     private static void sendUser(Player player, String key,Map<String ,Object> values){
         String local = player.getLocale();
         String message = MessageLoader.getMessage(key, local);
