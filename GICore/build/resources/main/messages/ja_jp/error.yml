@@ -1,0 +1,6 @@
+invalid_value: "§c알수없는 데이터입니다..."
+invalid_format: "§c알수없는 형식입니다..."
+missing_value: '§c값을 찾을수 없습니다...'
+missing_format: '§c형식을 찾지못했습니다...'
+not_found_data: '§c데이터를 찾지못했습니다...'
+number_error: '§c숫자를 입력해주세요: {value}'

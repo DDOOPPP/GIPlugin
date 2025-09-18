@@ -4,11 +4,11 @@ deposit_ng: '§c입금에 실패했습니다...'
 withdraw_ok: '§c-{amount}'
 withdraw_ng: '§c출금에 실패했습니다...'
 
-deposit_admin_ok: '§7{target_name}에게 {amount}를 입금했습니다...'
-deposit_admin_ng: '§c{target_name}에게 입금을 실패했습니다...'
+deposit_admin_ok: '§7%player_name%에게 {amount}를 입금했습니다...'
+deposit_admin_ng: '§c%player_name%에게 입금을 실패했습니다...'
 
-withdraw_admin_ok: '§6{target_name}§f에게 §a{amount}§f를 출금했습니다...'
-withdraw_admin_ng: '§c{target_name}에게 출금을 실패했습니다...'
+withdraw_admin_ok: '§6%player_name%§f에게 §a{amount}§f를 출금했습니다...'
+withdraw_admin_ng: '§c%player_name%에게 출금을 실패했습니다...'
 
 not_enough_balance: '§c소지금액이 부족합니다...'
 
