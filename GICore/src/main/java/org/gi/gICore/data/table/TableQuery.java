@@ -17,7 +17,8 @@ public class TableQuery {
             + "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);";
 
     public static final String CREATE_GUILD_FUND = "CREATE TABLE IF NOT EXISTS "+GUILD_FUND +" ("
-            + "guild_id VARCHAR(36) PRIMARY KEY,"
+            + "id AUTO_INCREMENT PRIMARY KEY,"
+            + "guild_id VARCHAR(36)  NOT NULL,"
             + "player_name VARCHAR(50) NOT NULL,"
             + "type VARCHAR(20) NOT NULL,"
             + "amount DECIMAL(10,0) NOT NULL,"

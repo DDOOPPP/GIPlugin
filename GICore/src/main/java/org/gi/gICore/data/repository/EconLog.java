@@ -102,7 +102,7 @@ public class EconLog implements LogRepository<EconomyLog,Connection> {
 
     @Override
     public Result deleteOverCount(UUID key, Connection connection) {
-        String query = builder.deleteOlderKeepNForKey("player_id",count);
+        String query = builder.deleteOlderKeepNForKey("player_id");
         Result result = Result.FAIL;
 
         try(PreparedStatement statement = connection.prepareStatement(query)) {

@@ -82,6 +82,8 @@ public class DataBaseConnection {
 
                 statement.execute(TableQuery.CREATE_USER);
                 statement.execute(TableQuery.CREATE_ECON_LOG);   // FK 참조하므로 이후
+                statement.execute(TableQuery.CREATE_GUILD);
+                statement.execute(TableQuery.CREATE_GUILD_FUND);
 
                 SQLWarning warn = statement.getWarnings();
                 while (warn != null) {

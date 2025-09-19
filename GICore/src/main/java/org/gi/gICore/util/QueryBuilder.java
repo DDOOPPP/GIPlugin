@@ -106,18 +106,18 @@ public class QueryBuilder {
         return sql.toString();
     }
 
-    public static String deleteOlderKeepNForKey(String tableName, int keep) {
-        return "DELETE FROM " + backtick(tableName) + " " +
-                "WHERE `id` IN ( " +
-                "  SELECT id FROM ( " +
-                "    SELECT id, " +
-                "           ROW_NUMBER() OVER (PARTITION BY `key` " +
-                "                              ORDER BY COALESCE(`created_at`, '1970-01-01 00:00:00') DESC, `id` DESC) AS rn " +
-                "    FROM " + backtick(tableName) + " " +
-                "    WHERE `key` = ? " +
-                "  ) x " +
-                "  WHERE x.rn > ? " +
-                ")";
+    public String deleteOlderKeepNForKey(String key) {
+        String t = backtick(tableName);
+        String k = backtick(key);
+
+        return "DELETE " + t + " FROM " + t + " " +
+                "JOIN ( " +
+                "  SELECT id, ROW_NUMBER() OVER (PARTITION BY " + k + " " +
+                "                                ORDER BY COALESCE(`created_at`, '1970-01-01 00:00:00') DESC, `id` DESC) AS rn " +
+                "  FROM " + t + " " +
+                "  WHERE " + k + " = ? " +
+                ") r ON r.id = " + t + ".id " +
+                "WHERE r.rn > ?;";
     }
 
     private static String backtick(String identifier) {

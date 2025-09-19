@@ -1,10 +1,12 @@
 package org.gi.gICore.model.log;
 
+import lombok.Getter;
 import org.gi.gICore.model.Enum;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
+@Getter
 public class FundLog extends Log{
     private Enum.EconomyType economyType;
     private BigDecimal amount;

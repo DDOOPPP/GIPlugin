@@ -4,6 +4,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.gi.gICore.manager.EconomyManager;
+import org.gi.gICore.manager.UserService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -14,8 +15,10 @@ import java.util.regex.Pattern;
 
 public class GIPlaceHolder extends PlaceholderExpansion {
     private final EconomyManager manager;
+    private final UserService userService;
     public GIPlaceHolder() {
         manager = EconomyManager.getInstance();
+        userService = UserService.getInstance();
     }
 
     @NotNull
@@ -45,6 +48,8 @@ public class GIPlaceHolder extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         if (params.equals("balance")) {
             return manager.format(manager.getBalance(player).doubleValue());
+        }else if (params.equals("guild")){
+            return userService.getUserData(player.getUniqueId()).getGuildName();
         }else{
             return null;
         }
@@ -54,7 +59,10 @@ public class GIPlaceHolder extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, @NotNull String params) {
         if (params.equals("balance")) {
             return manager.format(manager.getBalance(player).doubleValue());
-        }else{
+        }else if (params.equals("guild")){
+            return userService.getUserData(player.getUniqueId()).getGuildName();
+        }
+        else{
             return null;
         }
     }
