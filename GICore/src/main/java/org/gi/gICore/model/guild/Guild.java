@@ -2,23 +2,26 @@ package org.gi.gICore.model.guild;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
+@Setter
 @Getter
 @AllArgsConstructor
+@ToString
 public class Guild {
-    private UUID uuid;
-    private String name;
-    private int memberCount;
+    private UUID guildId;
+    private String guildName;
+    private UUID ownerId;
     private BigDecimal fund;
-    private List<UUID> members;
+    private int level;
+    private BigDecimal exp;
+    private String notice;
 
-    public UUID getMember(UUID memberName){
-        if(members.contains(memberName)){
-            return memberName;
-        }
-        return null;
+    public boolean isOwner(UUID ownerId) {
+        return this.ownerId.equals(ownerId);
     }
 }

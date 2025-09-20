@@ -22,7 +22,7 @@ public class GILogger {
         logger.warning(msg);
     }
 
-    public void warn(String msg,String message){
+    public void warn(String msg,Object message){
         String transfer = msg.formatted(message);
         warn(transfer);
     }
@@ -31,7 +31,7 @@ public class GILogger {
         logger.severe(msg);
     }
 
-    public void error(String msg,String message){
+    public void error(String msg,Object message){
         String transfer = msg.formatted(message);
         error(transfer);
     }

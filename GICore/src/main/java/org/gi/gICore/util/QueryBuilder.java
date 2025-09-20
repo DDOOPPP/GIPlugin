@@ -85,6 +85,18 @@ public class QueryBuilder {
         return "DELETE FROM " + tableName + " WHERE " + key + " = ?";
     }
 
+    public String buildDelete(List<String> columns) {
+        StringBuilder sql = new StringBuilder("DELETE FROM " + tableName + " WHERE ");
+
+        String conditions = columns.stream()
+                .map(col -> col + " = ?")
+                .collect(Collectors.joining(" AND "));
+
+        sql.append(conditions);
+
+        return sql.toString();
+    }
+
     public String buildSelect(List<String> whereColumns, String orderBy, Integer limit) {
         StringBuilder sql = new StringBuilder("SELECT * FROM ").append(tableName);
 

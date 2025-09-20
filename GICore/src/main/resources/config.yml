@@ -20,7 +20,7 @@ resource-pack:
 database: 'MySQL'
 host: 'localhost'
 port: 3306
-log_count: 30
+log_count: 100
 
 mysql:
   user: 'root'
@@ -31,23 +31,3 @@ mysql:
   idleTimeout: 60000 #60 Sec
   maxLifetime: 1800000 # 30 Min
   connectionTimeout: 10000 # 10Sec
-
-useCache: true
-cache:
-  host: '172.31.173.125'
-  port: '6379'
-  timeout: 10000
-
-msg_files:
-  - "messages/economy.yml"
-  - "messages/common.yml"
-test:
-  - "label.gi.modifiers"
-  - "stat.gi.attack_speed"
-  - "stat.gi.attack_damage"
-  - "stat.gi.required_level"
-  - "stat.gi.fire_damage"
-  - "item.gi.sword.long_sword"
-  - "lore.gi.sword.long_sword.extra"
-  - "modifier.gi.sharp"
-  - "modifier.gi.fiery"
