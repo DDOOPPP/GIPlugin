@@ -34,16 +34,16 @@ public class TableQuery {
             + "exp DECIMAL(10,0) NOT NULL DEFAULT 0,"
             + "notice VARCHAR(100) NOT NULL DEFAULT '',"
             + "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-            + "FOREIGN KEY (owner_id) REFERENCES "+ USER +"(player_id))";
+            + "FOREIGN KEY (owner_id) REFERENCES "+ USER +"(player_id) ON DELETE CASCADE)";
 
     public static final String CREATE_GUILD_MEMBER =  "CREATE TABLE IF NOT EXISTS "+GUILD_MEMBER+" ("
-            + "guild_id VARCHAR(36),"
-            + "member_id VARCHAR(36),"
+            + "guild_id VARCHAR(36)NOT NULL,"
+            + "member_id VARCHAR(36) NOT NULL UNIQUE,"
             + "role VARCHAR(20) NOT NULL,"
             + "joined_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
             + "PRIMARY KEY (guild_id, member_id),"
-            + "FOREIGN KEY (guild_id)  REFERENCES "+GUILD+"(guild_id),"
-            + "FOREIGN KEY (member_id)  REFERENCES "+USER+"(player_id),"
+            + "FOREIGN KEY (guild_id)  REFERENCES "+GUILD+"(guild_id) ON DELETE CASCADE,"
+            + "FOREIGN KEY (member_id)  REFERENCES "+USER+"(player_id) ON DELETE CASCADE,"
             + ");";
 
     public static final String CREATE_GUILD_LOG = "CREATE TABLE IF NOT EXISTS "+GUILD_LOG+" ("
@@ -52,8 +52,8 @@ public class TableQuery {
             + "event VARCHAR(20) NOT NULL,"
             + "amount DECIMAL(10,0) NOT NULL"
             + "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-            + "FOREIGN KEY (guild_id)  REFERENCES " + GUILD + "(guild_id),"
-            + "FOREIGN KEY (member_id) REFERENCES "+USER+"(player_id),"
+            + "FOREIGN KEY (guild_id)  REFERENCES " + GUILD + "(guild_id) ON DELETE CASCADE,"
+            + "FOREIGN KEY (member_id) REFERENCES "+USER+"(player_id) ON DELETE CASCADE,"
             + ")";
 
 }

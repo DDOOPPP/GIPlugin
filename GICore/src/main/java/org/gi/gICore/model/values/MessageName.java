@@ -22,4 +22,18 @@ public class MessageName {
 
     public static final String CALL_ADMIN = "call_admin";
     public static final String NUMBER_ERROR = "number_error";
+
+    public static final String GUILD_CREATE_NG = "guild_create_ng";
+    public static final String GUILD_CREATE_OK = "guild_create_ok";
+
+    public static final String GUILD_DESTROY_NG = "guild_destroy_ng";
+    public static final String GUILD_DESTROY_OK = "guild_destroy_ok";
+
+    public static final String SAME_ID_EXISTS = "same_id_exists";
+    public static final String ALREADY_JOINED_GUILD = "already_joined";
+    public static final String NOT_HAVE_PERMISSION = "not_have_permission";
+
+    public static final String CANT_BAN_OWNER = "cant_ban_owner";
+    public static final String MEMBER_NOT_FOUND = "member_not_found";
+    public static final String GUILD_FULL =  "guild_full";
 }
