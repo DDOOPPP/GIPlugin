@@ -1,57 +1,178 @@
 package org.gi.gICore.manager;
 
-import jdk.jfr.consumer.RecordedStackTrace;
-import org.gi.gICore.data.repository.EconLog;
+import io.lumine.mythic.bukkit.utils.lib.jooq.User;
+import javafx.beans.property.ReadOnlySetProperty;
+import org.gi.gICore.GILogger;
+import org.gi.gICore.data.database.DataBaseConnection;
+import org.gi.gICore.data.repository.EconLogRepository;
 import org.gi.gICore.data.repository.UserRepository;
+import org.gi.gICore.model.Enum;
 import org.gi.gICore.model.log.EconomyLog;
 import org.gi.gICore.model.user.UserData;
 import org.gi.gICore.util.Result;
 
-import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class UserService {
+    public static UserService instance;
     private UserRepository userRepository;
-    private static UserService instance;
+    private EconLogRepository logRepository;
+    private GILogger logger;
     public UserService() {
-        this.userRepository = new UserRepository();
+        userRepository = new UserRepository();
+        logRepository = new EconLogRepository();
+        logger = new GILogger();
+
         instance = this;
     }
 
     public Result create(UserData userData) {
-        return userRepository.insert(userData);
+        Connection connection = null;
+        try{
+            connection = DataBaseConnection.getDataSource().getConnection();
+            connection.setAutoCommit(false);
+
+            Result result = userRepository.insert(userData,connection);
+
+            EconomyLog log = new EconomyLog(
+                    userData.getPlayerUUID(),
+                    userData.getPlayerName(),
+                    Enum.EconomyType.CREATE,
+                    userData.getBalance(),
+                    userData.getBalance()
+            );
+
+            Result logResult = logRepository.insert(log,connection);
+
+            if (result.isSuccess() && logResult.isSuccess()) {
+                connection.commit();
+                return Result.SUCCESS;
+            }
+
+            DataBaseConnection.rollback(connection);
+        }  catch (SQLException e) {
+            if (connection != null) {
+                DataBaseConnection.rollback(connection);
+            }
+            return Result.Exception(e);
+        }finally {
+            if (connection != null) {
+                DataBaseConnection.disconnect(connection);
+            }
+        }
+        return Result.FAIL;
     }
 
-    public Result updateBalance(UUID userId, EconomyLog economyLog) {
-        return userRepository.updateBalance(userId,economyLog);
+    public boolean isExist(UUID uuid) {
+        return getUserData(uuid) != null;
     }
 
-    public Result changeUsername(UUID userId, String newUsername) {
-        return userRepository.updatePlayerName(userId,newUsername);
+    public UserData getUserData(UUID uuid) {
+        Connection connection = null;
+        try{
+            connection = DataBaseConnection.getDataSource().getConnection();
+
+            return userRepository.find(uuid,connection);
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            return null;
+        }finally {
+            if (connection != null) {
+                DataBaseConnection.disconnect(connection);
+            }
+        }
     }
 
-    public Result changeGuild(UUID userId, String guildName) {
-        return userRepository.updateGuild(userId,guildName);
+    public Result updateBalance (UUID uuid, EconomyLog log) {
+        Connection connection = null;
+
+        try{
+            connection = DataBaseConnection.getDataSource().getConnection();
+
+            connection.setAutoCommit(false);
+
+            Result result = userRepository.updateBalance(log.getUuid(),log.getBalance(),connection);
+
+            Result logResult = logRepository.insert(log,connection);
+
+            if (result.isSuccess() && logResult.isSuccess()) {
+                connection.commit();
+                return Result.SUCCESS;
+            }
+
+            DataBaseConnection.rollback(connection);
+            return Result.FAIL;
+
+        }  catch (SQLException e) {
+            if (connection != null) {
+                DataBaseConnection.rollback(connection);
+            }
+            return Result.Exception(e);
+        }finally {
+            if (connection != null) {
+                DataBaseConnection.disconnect(connection);
+            }
+        }
     }
 
-    public UserData getUserData(UUID userId) {
-        return userRepository.find(userId);
+    public Result updateGuildName (UUID uuid, String guildName) {
+        Connection connection = null;
+
+        try{
+            connection = DataBaseConnection.getDataSource().getConnection();
+
+            connection.setAutoCommit(false);
+
+            Result result = userRepository.updateGuildName(uuid,guildName,connection);
+
+            if (result.isSuccess()) {
+                connection.commit();
+                return Result.SUCCESS;
+            }
+
+            DataBaseConnection.rollback(connection);
+            return Result.FAIL;
+
+        }  catch (SQLException e) {
+            if (connection != null) {
+                DataBaseConnection.rollback(connection);
+            }
+            return Result.Exception(e);
+        }finally {
+            if (connection != null) {
+                DataBaseConnection.disconnect(connection);
+            }
+        }
     }
 
-    public boolean isExistUser(UUID userId) {
-        return getUserData(userId) != null;
+    public Result deleteUser(UUID uuid) {
+        Connection connection = null;
+        try{
+            connection = DataBaseConnection.getDataSource().getConnection();
+
+            Result result = userRepository.delete(uuid,connection);
+
+            if (!result.isSuccess()) {
+                DataBaseConnection.rollback(connection);
+                return Result.FAIL;
+            }
+
+            return Result.SUCCESS;
+        }  catch (SQLException e) {
+            if (connection != null) {
+                DataBaseConnection.rollback(connection);
+            }
+            return Result.Exception(e);
+        }finally {
+            if (connection != null) {
+                DataBaseConnection.disconnect(connection);
+            }
+        }
     }
 
-    public boolean hasGuild(UUID userId) {
-        UserData userData = getUserData(userId);
-        if (userData == null) return false;
-
-        return userData.hasGuild();
-    }
-
-    public Result delete (UUID id) {
-        return userRepository.delete(id);
-    }
 
     public static UserService getInstance() {
         if (instance == null) {

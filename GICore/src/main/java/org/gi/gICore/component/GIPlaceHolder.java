@@ -7,12 +7,6 @@ import org.gi.gICore.manager.EconomyManager;
 import org.gi.gICore.manager.UserService;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class GIPlaceHolder extends PlaceholderExpansion {
     private final EconomyManager manager;
     private final UserService userService;

@@ -1,6 +1,5 @@
 package org.gi.gICore.component;
 
-import io.lumine.mythic.bukkit.utils.lib.jooq.User;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.OfflinePlayer;
@@ -100,7 +99,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public boolean hasAccount(OfflinePlayer player, String worldName) {
-        return userService.isExistUser(player.getUniqueId());
+        return userService.isExist(player.getUniqueId());
     }
 
     @Override
@@ -316,7 +315,7 @@ public class GIEconomy implements Economy {
 
     @Override
     public boolean createPlayerAccount(OfflinePlayer player, String worldName) {
-        if (userService.isExistUser(player.getUniqueId())) {
+        if (hasAccount(player)){
             return true;
         }
         UUID uuid = player.getUniqueId();

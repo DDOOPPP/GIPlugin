@@ -37,23 +37,24 @@ public class TableQuery {
             + "FOREIGN KEY (owner_id) REFERENCES "+ USER +"(player_id) ON DELETE CASCADE)";
 
     public static final String CREATE_GUILD_MEMBER =  "CREATE TABLE IF NOT EXISTS "+GUILD_MEMBER+" ("
-            + "guild_id VARCHAR(36)NOT NULL,"
+            + "guild_id VARCHAR(36) NOT NULL,"
             + "member_id VARCHAR(36) NOT NULL UNIQUE,"
             + "role VARCHAR(20) NOT NULL,"
             + "joined_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
             + "PRIMARY KEY (guild_id, member_id),"
             + "FOREIGN KEY (guild_id)  REFERENCES "+GUILD+"(guild_id) ON DELETE CASCADE,"
-            + "FOREIGN KEY (member_id)  REFERENCES "+USER+"(player_id) ON DELETE CASCADE,"
+            + "FOREIGN KEY (member_id)  REFERENCES "+USER+"(player_id) ON DELETE CASCADE"
             + ");";
 
     public static final String CREATE_GUILD_LOG = "CREATE TABLE IF NOT EXISTS "+GUILD_LOG+" ("
-            + "guild_id VARCHAR(36) PRIMARY KEY,"
-            + "member_id VARCHAR(36) PRIMARY KEY,"
+            + "guild_id VARCHAR(36) NOT NULL,"
+            + "member_id VARCHAR(36) NOT NULL,"
             + "event VARCHAR(20) NOT NULL,"
-            + "amount DECIMAL(10,0) NOT NULL"
+            + "amount DECIMAL(10,0) NOT NULL,"
             + "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+            + "PRIMARY KEY (guild_id, member_id),"
             + "FOREIGN KEY (guild_id)  REFERENCES " + GUILD + "(guild_id) ON DELETE CASCADE,"
-            + "FOREIGN KEY (member_id) REFERENCES "+USER+"(player_id) ON DELETE CASCADE,"
+            + "FOREIGN KEY (member_id) REFERENCES "+USER+"(player_id) ON DELETE CASCADE"
             + ")";
 
 }

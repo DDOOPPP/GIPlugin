@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.Indyuce.mmocore.api.player.PlayerData;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -39,5 +42,13 @@ public class UserData implements Serializable {
             return false;
         }
         return true;
+    }
+
+    public Player getPlayer(){
+        return Bukkit.getPlayer(this.playerUUID);
+    }
+
+    public OfflinePlayer getOfflinePlayer(){
+        return Bukkit.getOfflinePlayer(this.playerUUID);
     }
 }

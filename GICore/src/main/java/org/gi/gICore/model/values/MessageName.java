@@ -33,6 +33,10 @@ public class MessageName {
     public static final String ALREADY_JOINED_GUILD = "already_joined";
     public static final String NOT_HAVE_PERMISSION = "not_have_permission";
 
+    public static final String JOIN_GUILD_OK = "join_guild_ok";
+    public static final String JOIN_GUILD_NG = "join_guild_ng";
+
+    public static final String NOT_JOIN_GUILD = "not_join_guild";
     public static final String CANT_BAN_OWNER = "cant_ban_owner";
     public static final String MEMBER_NOT_FOUND = "member_not_found";
     public static final String GUILD_FULL =  "guild_full";

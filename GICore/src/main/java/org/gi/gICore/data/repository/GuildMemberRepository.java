@@ -1,183 +1,127 @@
 package org.gi.gICore.data.repository;
 
-import org.apache.logging.log4j.message.ReusableMessage;
 import org.gi.gICore.GILogger;
-import org.gi.gICore.data.database.DataBaseConnection;
 import org.gi.gICore.data.table.TableQuery;
-
-import org.gi.gICore.model.guild.GuildLog;
 import org.gi.gICore.model.guild.GuildMember;
 import org.gi.gICore.model.guild.GuildRole;
 import org.gi.gICore.util.QueryBuilder;
 import org.gi.gICore.util.Result;
 
-import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class GuildMemberRepository {
-    private QueryBuilder queryBuilder;
+    private QueryBuilder builder;
     private GILogger logger;
-    private GuildLogRepository guildLogRepository;
 
-    public GuildMemberRepository(){
+    public GuildMemberRepository() {
+        this.builder = new QueryBuilder(TableQuery.GUILD_MEMBER);
         this.logger = new GILogger();
-        this.queryBuilder = new QueryBuilder(TableQuery.GUILD_MEMBER);
-        this.guildLogRepository = new GuildLogRepository();
     }
 
-    public Result insertMember(GuildMember member){
-        Connection connection = null;
-        String query = queryBuilder.buildInsert(
-                List.of("guild_id","member_id","role")
+    public Result insert(GuildMember member, Connection connection) {
+        String query = builder.buildInsert(
+                List.of("member_id", "guild_id", "role")
         );
-        Result result = null;
-        try{
-            connection = DataBaseConnection.getDataSource().getConnection();
-            connection.setAutoCommit(false);
-            try(PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
-                statement.setString(1,member.getGuildId().toString());
-                statement.setString(2,member.getUserId().toString());
-                statement.setString(3,member.getRole().name());
 
-                result = statement.executeUpdate() > 0 ? Result.SUCCESS : Result.FAIL;
+        Result result = Result.FAIL;
 
-                if (!result.isSuccess()){
-                    DataBaseConnection.rollback(connection);
-                    return result;
-                }
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, member.getUserId().toString());
+            statement.setString(2, member.getGuildId().toString());
+            statement.setString(3, member.getRole().name());
 
-                GuildLog log = new GuildLog(
-                        member.getGuildId(),
-                        member.getUserId(),
-                        GuildRole.event.JOIN,
-                        BigDecimal.valueOf(0)
-                );
-
-                result = guildLogRepository.insert(log,connection);
-
-                if (!result.isSuccess()){
-                    DataBaseConnection.rollback(connection);
-                    logger.error(result.getMsg());
-                    return result;
-                }
-                connection.commit();
-            }
+            result = statement.executeUpdate() > 0 ? Result.SUCCESS : Result.FAIL;
         } catch (SQLException e) {
-            DataBaseConnection.rollback(connection);
-            logger.error(e.getMessage());
             return Result.Exception(e);
-        }finally {
-            try {
-                if (connection != null){
-                    connection.close();
-                }
-            } catch (SQLException e) {
-
-            }
         }
         return result;
     }
 
-    public Result deleteMember(UUID player_id){
-        String query = queryBuilder.buildDelete("member_id");
-        Connection connection = null;
-        Result result = null;
+    public Result updateRole(UUID playerId, GuildRole.Role role, Connection connection) {
+        String query = builder.buildUpdate("member_id", "role");
 
-        try{
-            connection = DataBaseConnection.getDataSource().getConnection();
+        Result result = Result.FAIL;
 
-            try(PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
-                statement.setString(1,player_id.toString());
-                result = statement.executeUpdate() > 0 ? Result.SUCCESS : Result.FAIL;
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, role.name());
+            statement.setString(2, playerId.toString());
 
-                return result;
-            }
+            result = statement.executeUpdate() > 0 ? Result.SUCCESS : Result.FAIL;
         } catch (SQLException e) {
-            DataBaseConnection.rollback(connection);
-            logger.error(e.getMessage());
-        }finally {
-            try {
-                if (connection != null){
-                    connection.close();
-                }
-            } catch (SQLException e) {
-
-            }
+            return Result.Exception(e);
         }
         return result;
     }
 
-    public Result updateMember(UUID player_uuid,UUID guild_id, GuildRole.event event, BigDecimal amount){
-        Connection connection = null;
-        Result result = null;
+    public Result deleteMember(UUID playerId, Connection connection) {
+        String query = builder.buildDelete("member_id");
+        Result result = Result.FAIL;
 
-        GuildLog guildLog = new GuildLog(
-                guild_id,
-                player_uuid,
-                event,
-                amount
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, playerId.toString());
+
+            result = statement.executeUpdate() > 0 ? Result.SUCCESS : Result.FAIL;
+        } catch (SQLException e) {
+            return Result.Exception(e);
+        }
+        return result;
+    }
+
+    public GuildMember getMember(UUID guildId,UUID playerId, Connection connection) {
+        String query = builder.buildSelect(
+                List.of("guild_id","member_id")
         );
-        try{
-            connection = DataBaseConnection.getDataSource().getConnection();
-            connection.setAutoCommit(false);
+        GuildMember member = null;
 
-            result = guildLogRepository.insert(guildLog,connection);
+        try(PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, guildId.toString());
+            statement.setString(2, playerId.toString());
 
-            if (!result.isSuccess()){
-                DataBaseConnection.rollback(connection);
-                return result;
-            }
-        } catch (SQLException e) {
-            DataBaseConnection.rollback(connection);
-            return  Result.Exception(e);
-        }
-        return result;
-    }
-
-    public GuildMember getMember(UUID player_id){
-        String query = queryBuilder.buildSelectSingle("member_id");
-        GuildMember guildMember = null;
-        try(Connection connection = DataBaseConnection.getDataSource().getConnection()){
-            try(PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
-                statement.setString(1,player_id.toString());
-                ResultSet resultSet = statement.executeQuery();
-                if (resultSet.next()){
-                    guildMember = new GuildMember(
-                            player_id,
-                            UUID.fromString(resultSet.getString("guild_id")),
+            try(ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    member = new GuildMember(
+                            playerId,
+                            guildId,
                             GuildRole.Role.valueOf(resultSet.getString("role"))
                     );
                 }
             }
 
         } catch (SQLException e) {
-            logger.error(e.getMessage());
+            Result.Exception(e);
         }
-        return guildMember;
+        return member;
     }
 
-    public List<GuildMember> getMembers(UUID guild_id){
-        String query = queryBuilder.buildSelectSingle("guild_id");
+    public List<GuildMember> getMembers(UUID guildId, Connection connection) {
+        String query = builder.buildSelect(
+                List.of("guild_id")
+        );
+        logger.warn(query);
         List<GuildMember> members = new ArrayList<>();
-        try(Connection connection = DataBaseConnection.getDataSource().getConnection()){
-            try(PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 
-                statement.setString(1,guild_id.toString());
-                ResultSet resultSet = statement.executeQuery();
-                while (resultSet.next()){
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setString(1, guildId.toString());
+
+            try(ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
                     members.add(new GuildMember(
-                            UUID.fromString(resultSet.getString("member_id")),
-                            guild_id,
+                            UUID.fromString("member_id"),
+                            guildId,
                             GuildRole.Role.valueOf(resultSet.getString("role"))
                     ));
                 }
             }
 
         } catch (SQLException e) {
-            logger.error(e.getMessage());
+            Result.Exception(e);
+            return List.of();
         }
         return members;
     }

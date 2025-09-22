@@ -8,6 +8,7 @@ import org.gi.gIAPI.component.adapter.GIConfig;
 import org.gi.gICore.GICore;
 import org.gi.gICore.GILogger;
 import org.gi.gICore.data.table.TableQuery;
+import org.gi.gICore.util.Result;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -122,6 +123,16 @@ public class DataBaseConnection {
         } catch (SQLException e) {
             logger.error("[DB] Connection RollBack Failed");
             logger.error(e.getMessage());
+        }
+    }
+
+    public static void disconnect(Connection connection){
+        try{
+            if (connection != null){
+                connection.close();
+            }
+        } catch (SQLException e) {
+            Result.Exception(e);
         }
     }
 
