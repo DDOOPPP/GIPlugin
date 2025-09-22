@@ -146,7 +146,11 @@ public class GuildService {
             Result result = memberRepository.insert(newMember,connection);
 
             if (result.isSuccess()){
-                Result update = userService.updateGuildName(targetId,)
+                Result update = userService.updateGuildName(targetId, guild.getGuildName());
+
+                if (update.isSuccess()){
+                    return Result.SUCCESS(MessageName.JOIN_GUILD_OK);
+                }
             }
 
             if (connection != null) {
@@ -165,6 +169,51 @@ public class GuildService {
         }
     }
 
+    public Result leave(UUID playerId){
+        UserData data = userService.getUserData(playerId);
+        if (data == null) {
+            return Result.ERROR(MessageName.NOT_FOUND_DATA);
+        }
+
+        if (!data.hasGuild()){
+            return Result.ERROR(MessageName.NOT_JOIN_GUILD);
+        }
+        Connection connection = null;
+
+        try{
+            connection = DataBaseConnection.getDataSource().getConnection();
+
+            GuildMember member = memberRepository.getMember(playerId,connection);
+
+            if (member.isOwner()){
+                return Result.ERROR(MessageName.CANT_BAN_OWNER);
+            }
+
+            Result result = memberRepository.deleteMember(playerId,connection);
+
+            if (result.isSuccess()){
+                return Result.SUCCESS(MessageName.GUILD_LEAVE_OK);
+            }
+
+            DataBaseConnection.rollback(connection);
+            return Result.ERROR(MessageName.GUILD_LEAVE_NG);
+        } catch (SQLException e) {
+            if (connection != null) {
+                DataBaseConnection.rollback(connection);
+            }
+            return Result.Exception(e);
+        }finally {
+            if (connection != null) {
+                DataBaseConnection.disconnect(connection);
+            }
+        }
+    }
+
+    public Result kick(UUID playerId, UUID targetId){
+        UserData data = userService.getUserData(targetId);
+
+        return Result.ERROR(MessageName.NOT_FOUND_DATA);
+    }
     public static GuildService getInstance() {
         if (instance == null) {
             instance = new GuildService();
