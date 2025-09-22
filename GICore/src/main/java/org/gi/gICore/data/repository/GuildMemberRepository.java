@@ -99,6 +99,30 @@ public class GuildMemberRepository {
         return member;
     }
 
+    public GuildMember getMember(UUID playerId, Connection connection) {
+        String query = builder.buildSelectSingle("member_id");
+
+        GuildMember member = null;
+
+        try(PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, playerId.toString());
+
+            try(ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    member = new GuildMember(
+                            playerId,
+                            UUID.fromString("guild_id"),
+                            GuildRole.Role.valueOf(resultSet.getString("role"))
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            Result.Exception(e);
+        }
+        return member;
+    }
+
     public List<GuildMember> getMembers(UUID guildId, Connection connection) {
         String query = builder.buildSelect(
                 List.of("guild_id")
