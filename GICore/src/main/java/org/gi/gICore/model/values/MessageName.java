@@ -23,6 +23,14 @@ public class MessageName {
     public static final String CALL_ADMIN = "call_admin";
     public static final String NUMBER_ERROR = "number_error";
 
+    public static final String LEAVE_GUILD_OK = "leave_guild_ok";
+    public static final String LEAVE_GUILD_NG = "leave_guild_ng";
+
+    public static final String KICK_GUILD_OK = "kick_guild_ok";
+    public static final String KICK_GUILD_NG = "kick_guild_ng";
+
+    public static final String OWNER_CANT_LEAVE = "owner_cant_leave";
+
     public static final String GUILD_CREATE_NG = "guild_create_ng";
     public static final String GUILD_CREATE_OK = "guild_create_ok";
 
@@ -32,6 +40,8 @@ public class MessageName {
     public static final String SAME_ID_EXISTS = "same_id_exists";
     public static final String ALREADY_JOINED_GUILD = "already_joined";
     public static final String NOT_HAVE_PERMISSION = "not_have_permission";
+
+    public static final String DIFF_GUILD = "diff_guild";
 
     public static final String JOIN_GUILD_OK = "join_guild_ok";
     public static final String JOIN_GUILD_NG = "join_guild_ng";

@@ -6,6 +6,6 @@ public class GuildRole {
     }
 
     public enum event{
-        JOIN, LEAVE, LEVEL_UP, DEPOSIT, WITHDRAW, NEW
+        JOIN, LEAVE, LEVEL_UP, DEPOSIT, WITHDRAW, NEW, KICK;
     }
 }

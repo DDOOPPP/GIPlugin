@@ -1,6 +1,9 @@
 package org.gi.gICore.manager;
 
+import lombok.extern.flogger.Flogger;
+import org.codehaus.plexus.util.dag.DAG;
 import org.gi.gIAPI.component.adapter.GIConfig;
+import org.gi.gICore.GILogger;
 import org.gi.gICore.data.database.DataBaseConnection;
 import org.gi.gICore.data.repository.GuildLogRepository;
 import org.gi.gICore.data.repository.GuildMemberRepository;
@@ -14,6 +17,7 @@ import org.gi.gICore.model.user.UserData;
 import org.gi.gICore.model.values.MessageName;
 import org.gi.gICore.util.Result;
 
+import javax.print.DocFlavor;
 import javax.xml.validation.Validator;
 import java.io.File;
 import java.lang.reflect.Member;
@@ -30,6 +34,7 @@ public class GuildService {
     private GuildSetting setting;
     private UserService userService;
     private EconomyManager economyManager;
+    private GILogger logger;
 
     public GuildService(){
         this.repository = new GuildRepository();
@@ -39,6 +44,8 @@ public class GuildService {
         this.economyManager = EconomyManager.getInstance();
         GIConfig config = ConfigManager.getConfig("setting.yml");
         this.setting = new GuildSetting(config);
+
+        logger = new GILogger();
         instance = this;
     }
 
@@ -170,49 +177,53 @@ public class GuildService {
     }
 
     public Result leave(UUID playerId){
-        UserData data = userService.getUserData(playerId);
-        if (data == null) {
-            return Result.ERROR(MessageName.NOT_FOUND_DATA);
-        }
-
-        if (!data.hasGuild()){
-            return Result.ERROR(MessageName.NOT_JOIN_GUILD);
-        }
         Connection connection = null;
 
         try{
             connection = DataBaseConnection.getDataSource().getConnection();
 
             GuildMember member = memberRepository.getMember(playerId,connection);
+            connection.setAutoCommit(false);
+            if (member == null){
+                return Result.ERROR(MessageName.MEMBER_NOT_FOUND);
+            }
 
             if (member.isOwner()){
-                return Result.ERROR(MessageName.CANT_BAN_OWNER);
+                return Result.ERROR(MessageName.OWNER_CANT_LEAVE);
             }
 
             Result result = memberRepository.deleteMember(playerId,connection);
-
-            if (result.isSuccess()){
-                return Result.SUCCESS(MessageName.GUILD_LEAVE_OK);
+            if (!result.isSuccess()){
+                DataBaseConnection.rollback(connection);
+                return Result.ERROR(MessageName.LEAVE_GUILD_NG);
             }
 
-            DataBaseConnection.rollback(connection);
-            return Result.ERROR(MessageName.GUILD_LEAVE_NG);
+            GuildLog log = new GuildLog(
+                    member.getGuildId(),
+                    playerId,
+                    GuildRole.event.LEAVE,
+                    BigDecimal.valueOf(0)
+            );
+            Result logResult = logRepository.insert(log,connection);
+
+            if (!logResult.isSuccess()){
+                DataBaseConnection.rollback(connection);
+                return Result.ERROR(MessageName.LEAVE_GUILD_NG);
+            }
+
+            connection.commit();
+            return Result.SUCCESS(MessageName.LEAVE_GUILD_OK);
         } catch (SQLException e) {
             if (connection != null) {
                 DataBaseConnection.rollback(connection);
             }
+
             return Result.Exception(e);
         }finally {
             if (connection != null) {
                 DataBaseConnection.disconnect(connection);
             }
         }
-    }
-
-    public Result kick(UUID playerId, UUID targetId){
-        UserData data = userService.getUserData(targetId);
-
-        return Result.ERROR(MessageName.NOT_FOUND_DATA);
     }
     public static GuildService getInstance() {
         if (instance == null) {
