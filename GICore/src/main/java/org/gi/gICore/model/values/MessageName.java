@@ -41,6 +41,8 @@ public class MessageName {
     public static final String ALREADY_JOINED_GUILD = "already_joined";
     public static final String NOT_HAVE_PERMISSION = "not_have_permission";
 
+    public static final String SELF_KICK_IS_NOT_AVAILABLE = "self_kick_is_not_available";
+
     public static final String DIFF_GUILD = "diff_guild";
 
     public static final String JOIN_GUILD_OK = "join_guild_ok";

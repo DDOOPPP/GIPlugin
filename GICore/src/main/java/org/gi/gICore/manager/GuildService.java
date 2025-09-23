@@ -225,6 +225,67 @@ public class GuildService {
             }
         }
     }
+
+    public Result kick(UUID playerId,UUID targetId){
+        Connection connection = null;
+
+        if (playerId.equals(targetId)){
+            return  Result.ERROR(MessageName.SELF_KICK_IS_NOT_AVAILABLE);
+        }
+
+        try{
+            connection = DataBaseConnection.getDataSource().getConnection();
+            GuildMember member = memberRepository.getMember(playerId,connection);
+            if (member == null){
+                return Result.ERROR(MessageName.MEMBER_NOT_FOUND);
+            }
+
+            if (!member.isOwner()){
+                return Result.ERROR(MessageName.NOT_HAVE_PERMISSION);
+            }
+
+            Result result = memberRepository.deleteMember(targetId,connection);
+
+            if (!result.isSuccess()){
+                DataBaseConnection.rollback(connection);
+                return Result.ERROR(MessageName.KICK_GUILD_NG);
+            }
+            UUID guildId = member.getGuildId();
+            GuildLog actionLog = new GuildLog(
+                    guildId,
+                    playerId,
+                    GuildRole.event.KICK,
+                    BigDecimal.valueOf(0)
+            );
+            GuildLog targetLog = new GuildLog(
+                    guildId,
+                    targetId,
+                    GuildRole.event.LEAVE,
+                    BigDecimal.valueOf(0)
+            );
+
+            Result action = logRepository.insert(actionLog,connection);
+            Result target = logRepository.insert(targetLog,connection);
+
+            if (!action.isSuccess() || !target.isSuccess()){
+                DataBaseConnection.rollback(connection);
+                return Result.ERROR(MessageName.KICK_GUILD_NG);
+            }
+
+            connection.commit();
+            return Result.SUCCESS(MessageName.KICK_GUILD_OK);
+        } catch (SQLException e) {
+            if (connection != null) {
+                DataBaseConnection.rollback(connection);
+            }
+
+            return Result.Exception(e);
+        }finally {
+            if (connection != null) {
+                DataBaseConnection.disconnect(connection);
+            }
+        }
+    }
     public static GuildService getInstance() {
         if (instance == null) {
             instance = new GuildService();
