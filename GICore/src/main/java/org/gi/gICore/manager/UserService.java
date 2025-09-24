@@ -90,11 +90,18 @@ public class UserService {
         Connection connection = null;
 
         try{
+
+
+
             connection = DataBaseConnection.getDataSource().getConnection();
 
             connection.setAutoCommit(false);
 
             Result result = userRepository.updateBalance(uuid,log.getAmount(),connection,type);
+
+            UserData userData = getUserData(uuid);
+
+            log.setBalance(userData.getBalance());
 
             Result logResult = logRepository.insert(log,connection);
 

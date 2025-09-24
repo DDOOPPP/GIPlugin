@@ -20,6 +20,7 @@ public class MessageName {
     public static final String NOT_FOUND_DATA = "not_found_data";
     public static final String USER_INFORMATION = "user_information";
 
+
     public static final String CALL_ADMIN = "call_admin";
     public static final String NUMBER_ERROR = "number_error";
 
@@ -40,6 +41,9 @@ public class MessageName {
     public static final String SAME_ID_EXISTS = "same_id_exists";
     public static final String ALREADY_JOINED_GUILD = "already_joined";
     public static final String NOT_HAVE_PERMISSION = "not_have_permission";
+
+    public static final String ROLE_CHANGE_FAIL = "role_change_fail";
+    public static final String ROLE_CHANGE_OK = "role_change_ok";
 
     public static final String SELF_KICK_IS_NOT_AVAILABLE = "self_kick_is_not_available";
 

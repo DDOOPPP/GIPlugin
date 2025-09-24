@@ -183,15 +183,16 @@ public class GIEconomy implements Economy {
                 player.getName(),
                 Enum.EconomyType.WITHDRAW,
                 BigDecimal.valueOf(amount),
-                BigDecimal.valueOf(balance)
+                BigDecimal.ZERO
         );
 
         Result result = userService.updateBalance(uuid, log, Enum.EconomyType.WITHDRAW);
         if (!result.isSuccess()){
             return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.WITHDRAW_NG);
         }
-
-        return new EconomyResponse(amount,balance, EconomyResponse.ResponseType.SUCCESS,MessageName.WITHDRAW_OK);
+        double newBalance = getBalance(player, worldName);
+        log.setBalance(BigDecimal.valueOf(newBalance));
+        return new EconomyResponse(amount,log.getBalance().doubleValue(), EconomyResponse.ResponseType.SUCCESS,MessageName.WITHDRAW_OK);
     }
 
     @Override
@@ -225,15 +226,16 @@ public class GIEconomy implements Economy {
                 player.getName(),
                 Enum.EconomyType.DEPOSIT,
                 BigDecimal.valueOf(amount),
-                BigDecimal.valueOf(balance)
+                BigDecimal.ZERO
         );
 
         Result result = userService.updateBalance(uuid, log, Enum.EconomyType.DEPOSIT);
         if (!result.isSuccess()){
             return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.DEPOSIT_NG);
         }
-
-        return new EconomyResponse(amount,balance, EconomyResponse.ResponseType.SUCCESS,MessageName.DEPOSIT_OK);
+        double newBalance = getBalance(player, worldName);
+        log.setBalance(BigDecimal.valueOf(newBalance));
+        return new EconomyResponse(amount,log.getBalance().doubleValue(), EconomyResponse.ResponseType.SUCCESS,MessageName.DEPOSIT_OK);
     }
 
     @Override
