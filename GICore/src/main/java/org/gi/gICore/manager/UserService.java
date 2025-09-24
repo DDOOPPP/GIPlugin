@@ -86,7 +86,7 @@ public class UserService {
         }
     }
 
-    public Result updateBalance (UUID uuid, EconomyLog log) {
+    public Result updateBalance (UUID uuid, EconomyLog log, Enum.EconomyType type) {
         Connection connection = null;
 
         try{
@@ -94,7 +94,7 @@ public class UserService {
 
             connection.setAutoCommit(false);
 
-            Result result = userRepository.updateBalance(log.getUuid(),log.getBalance(),connection);
+            Result result = userRepository.updateBalance(log.getUuid(),log.getBalance(),connection,type);
 
             Result logResult = logRepository.insert(log,connection);
 

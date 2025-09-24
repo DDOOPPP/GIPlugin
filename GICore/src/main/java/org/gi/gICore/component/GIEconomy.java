@@ -188,7 +188,7 @@ public class GIEconomy implements Economy {
                 BigDecimal.valueOf(balance)
         );
 
-        Result result = userService.updateBalance(uuid, log);
+        Result result = userService.updateBalance(uuid, log, Enum.EconomyType.WITHDRAW);
         if (!result.isSuccess()){
             return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.CALL_ADMIN);
         }
@@ -232,7 +232,7 @@ public class GIEconomy implements Economy {
                 BigDecimal.valueOf(balance)
         );
 
-        Result result = userService.updateBalance(uuid, log);
+        Result result = userService.updateBalance(uuid, log, Enum.EconomyType.DEPOSIT);
         if (!result.isSuccess()){
             return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.CALL_ADMIN);
         }

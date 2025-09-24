@@ -1,6 +1,8 @@
 package org.gi.gICore.manager;
 
 import lombok.extern.flogger.Flogger;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.codehaus.plexus.util.dag.DAG;
 import org.gi.gIAPI.component.adapter.GIConfig;
 import org.gi.gICore.GILogger;
@@ -19,6 +21,7 @@ import org.gi.gICore.util.Result;
 
 import javax.print.DocFlavor;
 import javax.xml.validation.Validator;
+import java.awt.desktop.OpenFilesEvent;
 import java.io.File;
 import java.lang.reflect.Member;
 import java.math.BigDecimal;
@@ -59,6 +62,11 @@ public class GuildService {
         }
         if (!economyManager.has(data.getPlayer(),setting.getCreateValue().doubleValue())){
             return Result.ERROR(MessageName.NOT_ENOUGH_BALANCE);
+        }
+
+        if (!economyManager.withdraw(data.getPlayer(),setting.getCreateValue().doubleValue()).equals(MessageName.WITHDRAW_NG)){
+
+            return Result.ERROR(MessageName.CALL_ADMIN);
         }
         UUID guildId =  UUID.randomUUID();
         Guild guild = new Guild(

@@ -3,6 +3,7 @@ package org.gi.gICore.data.repository;
 import io.lumine.mythic.bukkit.utils.lib.jooq.User;
 import org.gi.gICore.GILogger;
 import org.gi.gICore.data.table.TableQuery;
+import org.gi.gICore.model.Enum;
 import org.gi.gICore.model.user.UserData;
 import org.gi.gICore.util.QueryBuilder;
 import org.gi.gICore.util.Result;
@@ -69,13 +70,22 @@ public class UserRepository {
         return user;
     }
 
-    public Result updateBalance(UUID playerId, BigDecimal balance, Connection connection) {
+    public Result updateBalance(UUID playerId, BigDecimal balance, Connection connection, Enum.EconomyType type) {
         Result result = Result.FAIL;
-        String query = builder.buildUpdate("player_id","balance");
+        String query = "";
 
+        switch (type) {
+            case CREATE: return Result.ERROR("Long Type");
+            case DEPOSIT: query = builder.depositQuery("balance","player_id"); break;
+            case WITHDRAW: query = builder.withDrawQuery("balance","player_id"); break;
+        }
         try(PreparedStatement statement = connection.prepareStatement(query)){
             statement.setBigDecimal(1,balance);
             statement.setString(2,playerId.toString());
+
+            if (type == Enum.EconomyType.WITHDRAW) {
+                statement.setBigDecimal(3,balance);
+            }
 
             result = statement.executeUpdate() > 0 ? Result.SUCCESS : Result.FAIL;
         } catch (SQLException e) {
