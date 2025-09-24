@@ -4,6 +4,7 @@ import javafx.scene.layout.BackgroundImage;
 import org.gi.gICore.GILogger;
 import org.gi.gICore.data.database.DataBaseConnection;
 import org.gi.gICore.data.table.TableQuery;
+import org.gi.gICore.model.Enum;
 import org.gi.gICore.model.guild.Guild;
 import org.gi.gICore.util.QueryBuilder;
 import org.gi.gICore.util.Result;
@@ -47,13 +48,25 @@ public class GuildRepository {
         return result;
     }
 
-    public Result updateFund(UUID guildID, BigDecimal fund, Connection connection) {
-        String query = builder.buildUpdate("guild_id","fund");
+    public Result updateFund(UUID guildID, BigDecimal amount, Enum.EconomyType type, Connection connection) {
+        String query = "";
+        switch (type){
+            case DEPOSIT:
+                query = builder.depositQuery("fund","guild_id");
+                break;
+            case WITHDRAW:
+                query = builder.withDrawQuery("fund","guild_id");
+                break;
+        }
         Result result = Result.FAIL;
 
         try(PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setBigDecimal(1, fund);
+            statement.setBigDecimal(1, amount);
             statement.setString(2, guildID.toString());
+
+            if (type == Enum.EconomyType.WITHDRAW) {
+                statement.setBigDecimal(3, amount);
+            }
 
             result = statement.executeUpdate() > 0 ? Result.SUCCESS : Result.FAIL;
         } catch (SQLException e) {

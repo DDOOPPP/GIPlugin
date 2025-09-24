@@ -42,6 +42,9 @@ public class MessageName {
     public static final String ALREADY_JOINED_GUILD = "already_joined";
     public static final String NOT_HAVE_PERMISSION = "not_have_permission";
 
+    public static final String GUILD_FUND_UPDATE_OK = "guild_fund_update_ok";
+    public static final String GUILD_FUND_UPDATE_NG = "guild_fund_update_ng";
+
     public static final String ROLE_CHANGE_FAIL = "role_change_fail";
     public static final String ROLE_CHANGE_OK = "role_change_ok";
 
