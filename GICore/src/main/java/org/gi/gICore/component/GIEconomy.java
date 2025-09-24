@@ -222,6 +222,8 @@ public class GIEconomy implements Economy {
             return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.NOT_FOUND_DATA);
         }
 
+        balance += amount;
+
         EconomyLog log = new EconomyLog(
                 uuid,
                 player.getName(),

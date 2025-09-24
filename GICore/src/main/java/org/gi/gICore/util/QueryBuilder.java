@@ -1,5 +1,6 @@
 package org.gi.gICore.util;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -75,6 +76,14 @@ public class QueryBuilder {
                 .collect(Collectors.joining(", "));
 
         return "UPDATE " + tableName + " SET " + updates + " WHERE " + key + " = ?";
+    }
+
+    public String withDrawQuery(String target, String condition) {
+            return "UPDATE " + tableName + " SET " + target + " = "+ target +" - ? " + " WHERE " + condition + " = ? AND " + target + " >= ?";
+    }
+
+    public String depositQuery(String target, String condition) {
+        return "UPDATE " + tableName + " SET " + target + " = "+ target +" + ? " + " WHERE " + condition + " = ?";
     }
 
     public String buildUpdate(String key, String update) {
