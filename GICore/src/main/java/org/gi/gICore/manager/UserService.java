@@ -94,7 +94,7 @@ public class UserService {
 
             connection.setAutoCommit(false);
 
-            Result result = userRepository.updateBalance(log.getUuid(),log.getBalance(),connection,type);
+            Result result = userRepository.updateBalance(uuid,log.getAmount(),connection,type);
 
             Result logResult = logRepository.insert(log,connection);
 

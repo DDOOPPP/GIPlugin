@@ -73,7 +73,7 @@ public class UserRepository {
     public Result updateBalance(UUID playerId, BigDecimal balance, Connection connection, Enum.EconomyType type) {
         Result result = Result.FAIL;
         String query = "";
-
+        Result error = Result.ERROR;
         switch (type) {
             case CREATE: return Result.ERROR("Long Type");
             case DEPOSIT: query = builder.depositQuery("balance","player_id"); break;
@@ -86,7 +86,6 @@ public class UserRepository {
             if (type == Enum.EconomyType.WITHDRAW) {
                 statement.setBigDecimal(3,balance);
             }
-
             result = statement.executeUpdate() > 0 ? Result.SUCCESS : Result.FAIL;
         } catch (SQLException e) {
             return Result.Exception(e);

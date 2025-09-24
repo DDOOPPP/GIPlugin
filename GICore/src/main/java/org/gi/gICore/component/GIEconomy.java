@@ -178,8 +178,6 @@ public class GIEconomy implements Economy {
             return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.NOT_ENOUGH_BALANCE);
         }
 
-        balance -= amount;
-
         EconomyLog log = new EconomyLog(
                 uuid,
                 player.getName(),
@@ -190,7 +188,7 @@ public class GIEconomy implements Economy {
 
         Result result = userService.updateBalance(uuid, log, Enum.EconomyType.WITHDRAW);
         if (!result.isSuccess()){
-            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.CALL_ADMIN);
+            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.WITHDRAW_NG);
         }
 
         return new EconomyResponse(amount,balance, EconomyResponse.ResponseType.SUCCESS,MessageName.WITHDRAW_OK);
@@ -222,8 +220,6 @@ public class GIEconomy implements Economy {
             return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.NOT_FOUND_DATA);
         }
 
-        balance += amount;
-
         EconomyLog log = new EconomyLog(
                 uuid,
                 player.getName(),
@@ -234,7 +230,7 @@ public class GIEconomy implements Economy {
 
         Result result = userService.updateBalance(uuid, log, Enum.EconomyType.DEPOSIT);
         if (!result.isSuccess()){
-            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.CALL_ADMIN);
+            return new EconomyResponse(0,0, EconomyResponse.ResponseType.FAILURE, MessageName.DEPOSIT_NG);
         }
 
         return new EconomyResponse(amount,balance, EconomyResponse.ResponseType.SUCCESS,MessageName.DEPOSIT_OK);

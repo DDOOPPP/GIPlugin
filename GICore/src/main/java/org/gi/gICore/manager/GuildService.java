@@ -65,8 +65,7 @@ public class GuildService {
         }
 
         if (!economyManager.withdraw(data.getPlayer(),setting.getCreateValue().doubleValue()).equals(MessageName.WITHDRAW_NG)){
-
-            return Result.ERROR(MessageName.CALL_ADMIN);
+            return Result.ERROR(MessageName.WITHDRAW_NG);
         }
         UUID guildId =  UUID.randomUUID();
         Guild guild = new Guild(
